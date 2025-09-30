@@ -138,7 +138,7 @@ class Move:
         self.decel_t = decel_d / ((end_v + cruise_v) * 0.5)
 
 
-LOOKAHEAD_FLUSH_TIME = 0.250
+LOOKAHEAD_FLUSH_TIME = 0.150
 
 
 # Class to track a list of pending move requests and to facilitate
