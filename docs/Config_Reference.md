@@ -63,7 +63,7 @@ serial:
 #is_non_critical: False
 #   Setting this to True will allow the mcu to be disconnected and
 #   reconnected at will without errors. Helpful for USB-accelerometer boards
-#   and USB-probes
+#   and USB/CAN-probes
 ```
 
 ### [mcu my_extra_mcu]
@@ -3104,6 +3104,13 @@ printer kinematics.
 #   Endstop switch detection pin. If specified, then one may perform
 #   "homing moves" by adding a STOP_ON_ENDSTOP parameter to
 #   MANUAL_STEPPER movement commands.
+#position_min:
+#position_max:
+#   The minimum and maximum position the stepper can be commanded to
+#   move to. If specified then one may not command the stepper to move
+#   past the given position. Note that these limits do not prevent
+#   setting an arbitrary position with the `MANUAL_STEPPER
+#   SET_POSITION=x` command. The default is to not enforce a limit.
 ```
 
 ### [mixing_extruder]
@@ -4078,11 +4085,6 @@ PCA9632 LED support. The PCA9632 is used on the FlashForge Dreamer.
 #i2c_speed:
 #   See the "common I2C settings" section for a description of the
 #   above parameters.
-#scl_pin:
-#sda_pin:
-#   Alternatively, if the pca9632 is not connected to a hardware I2C
-#   bus, then one may specify the "clock" (scl_pin) and "data"
-#   (sda_pin) pins. The default is to use hardware I2C.
 #color_order: RGBW
 #   Set the pixel order of the LED (using a string containing the
 #   letters R, G, B, W). The default is RGBW.
@@ -4204,6 +4206,20 @@ pin:
 #maximum_mcu_duration:
 #static_value:
 #   These options are deprecated and should no longer be specified.
+```
+
+### [static_pwm_clock]
+
+Static configurable output pin (one may define any number of
+sections with an "static_pwm_clock" prefix).
+Pins configured here will be set up as clock output pins.
+Generally used to provide clock input to other hardware on the board.
+```
+[static_pwm_clock my_pin]
+pin:
+#   The pin to configure as an output. This parameter must be provided.
+#frequency: 100
+#   Target output frequency.
 ```
 
 ### [pwm_tool]
@@ -5072,16 +5088,21 @@ prefix).
 
 ### [mcp4018]
 
-Statically configured MCP4018 digipot connected via two gpio "bit
-banging" pins (one may define any number of sections with an "mcp4018"
-prefix).
+Statically configured MCP4018 digipot connected via i2c (one may
+define any number of sections with an "mcp4018" prefix).
 
 ```
 [mcp4018 my_digipot]
-scl_pin:
-#   The SCL "clock" pin. This parameter must be provided.
-sda_pin:
-#   The SDA "data" pin. This parameter must be provided.
+#i2c_address: 47
+#   The i2c address that the chip is using on the i2c bus. The default
+#   is 47.
+#i2c_mcu:
+#i2c_bus:
+#i2c_software_scl_pin:
+#i2c_software_sda_pin:
+#i2c_speed:
+#   See the "common I2C settings" section for a description of the
+#   above parameters.
 wiper:
 #   The value to statically set the given MCP4018 "wiper" to. This is
 #   typically set to a number between 0.0 and 1.0 with 1.0 being the
